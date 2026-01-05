@@ -1,86 +1,90 @@
-import { useMemo } from 'react';
 import Polaroid from './Polaroid';
 
 /**
  * =============================================================================
- * CUSTOMIZATION GUIDE
+ * ORBITING CONTENT - CUSTOMIZATION GUIDE
  * =============================================================================
  * 
- * TO ADD YOUR OWN PHOTOS:
- * 1. Add your images to src/assets/ folder
- * 2. Import them at the top: import photo1 from '@/assets/photo1.jpg';
- * 3. Replace the URL strings in the 'photos' array with your imported images
+ * PHOTOS:
+ * - Exactly 5 photos are displayed (edit the photos array below)
+ * - To use your own images: import photo1 from '@/assets/photo1.jpg';
+ * - Then replace the URL in the array with your imported variable
  * 
- * TO CHANGE THE YOUTUBE VIDEO:
- * 1. Find the YOUTUBE_EMBED_URL constant below
- * 2. Replace with your video: https://www.youtube.com/embed/YOUR_VIDEO_ID
+ * YOUTUBE VIDEO:
+ * - Change YOUTUBE_EMBED_URL to your video's embed link
+ * - Format: https://www.youtube.com/embed/YOUR_VIDEO_ID
  * 
- * TO CHANGE ROMANTIC TEXT:
- * 1. Edit the 'textSnippets' array below
+ * ORBIT SETTINGS:
+ * - ORBIT_DURATION: Time for one full rotation (default: 25s)
+ * - Orbit radius is calculated automatically based on video size + safe zone
+ * 
+ * TEXT SNIPPETS:
+ * - Edit the textSnippets array to change the floating messages
  * =============================================================================
  */
 
-// ========== REPLACE WITH YOUR YOUTUBE VIDEO ID ==========
+// ========== YOUTUBE VIDEO URL ==========
 const YOUTUBE_EMBED_URL = 'https://www.youtube.com/embed/dQw4w9WgXcQ';
-// =========================================================
 
-// ========== REPLACE THESE PHOTOS WITH YOUR OWN ==========
+// ========== ORBIT ANIMATION DURATION (seconds) ==========
+const ORBIT_DURATION = 25;
+
+// ========== EXACTLY 5 PHOTOS - REPLACE WITH YOUR OWN ==========
 const photos = [
-  { id: 1, src: 'https://images.unsplash.com/photo-1518495973542-4542c06a5843?w=200&h=200&fit=crop', alt: 'Memory 1' },
-  { id: 2, src: 'https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=200&h=200&fit=crop', alt: 'Memory 2' },
-  { id: 3, src: 'https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=200&h=200&fit=crop', alt: 'Memory 3' },
-  { id: 4, src: 'https://images.unsplash.com/photo-1447752875215-b2761acb3c5d?w=200&h=200&fit=crop', alt: 'Memory 4' },
-  { id: 5, src: 'https://images.unsplash.com/photo-1433086966358-54859d0ed716?w=200&h=200&fit=crop', alt: 'Memory 5' },
-  { id: 6, src: 'https://images.unsplash.com/photo-1501854140801-50d01698950b?w=200&h=200&fit=crop', alt: 'Memory 6' },
-  { id: 7, src: 'https://images.unsplash.com/photo-1465146344425-f00d5f5c8f07?w=200&h=200&fit=crop', alt: 'Memory 7' },
-  { id: 8, src: 'https://images.unsplash.com/photo-1475924156734-496f6cac6ec1?w=200&h=200&fit=crop', alt: 'Memory 8' },
+  { 
+    id: 1, 
+    src: 'https://images.unsplash.com/photo-1518495973542-4542c06a5843?w=200&h=200&fit=crop', 
+    alt: 'Memory 1' 
+  },
+  { 
+    id: 2, 
+    src: 'https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=200&h=200&fit=crop', 
+    alt: 'Memory 2' 
+  },
+  { 
+    id: 3, 
+    src: 'https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=200&h=200&fit=crop', 
+    alt: 'Memory 3' 
+  },
+  { 
+    id: 4, 
+    src: 'https://images.unsplash.com/photo-1447752875215-b2761acb3c5d?w=200&h=200&fit=crop', 
+    alt: 'Memory 4' 
+  },
+  { 
+    id: 5, 
+    src: 'https://images.unsplash.com/photo-1433086966358-54859d0ed716?w=200&h=200&fit=crop', 
+    alt: 'Memory 5' 
+  },
 ];
-// =========================================================
 
-// ========== CUSTOMIZE YOUR ROMANTIC TEXT SNIPPETS ==========
+// ========== ROMANTIC TEXT SNIPPETS ==========
 const textSnippets = [
   { id: 1, text: "My favorite person 💚" },
-  { id: 2, text: "Still can't believe you 🥺" },
-  { id: 3, text: "Us >>> everything" },
-  { id: 4, text: "Happy You Day ✨" },
-  { id: 5, text: "Forever my person 💕" },
-  { id: 6, text: "Best thing in my life" },
+  { id: 2, text: "Us >>> everything" },
+  { id: 3, text: "Happy You Day ✨" },
+  { id: 4, text: "Forever yours 💕" },
 ];
-// ============================================================
 
 const OrbitingContent = () => {
-  // Calculate responsive values based on screen size
-  const orbitConfig = useMemo(() => {
-    // Detect if mobile (will be recalculated on resize via CSS)
-    const isMobile = typeof window !== 'undefined' && window.innerWidth < 640;
-    const isTablet = typeof window !== 'undefined' && window.innerWidth < 1024;
-    
-    return {
-      // Number of photos to show based on screen size
-      visiblePhotos: isMobile ? 6 : isTablet ? 8 : 8,
-      // Photo orbit radius (CSS clamp handles responsiveness)
-      photoRadius: isMobile ? 120 : isTablet ? 180 : 220,
-      // Text orbit radius (outer ring)
-      textRadius: isMobile ? 180 : isTablet ? 280 : 340,
-    };
-  }, []);
-
-  const visiblePhotos = photos.slice(0, orbitConfig.visiblePhotos);
+  // Calculate angle for each photo: 360° / 5 = 72° between each
+  const angleGap = 360 / photos.length; // 72 degrees
 
   return (
-    <div className="relative w-full min-h-screen flex items-center justify-center overflow-hidden py-20">
-      {/* Background floating hearts */}
+    <div className="relative w-full min-h-screen flex items-center justify-center overflow-hidden">
+      
+      {/* Background floating hearts - subtle decoration */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
-        {[...Array(15)].map((_, i) => (
+        {[...Array(12)].map((_, i) => (
           <div
             key={i}
-            className="absolute text-love-pink opacity-15 animate-float"
+            className="absolute text-love-pink opacity-10 animate-float"
             style={{
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
-              fontSize: `${Math.random() * 16 + 8}px`,
-              animationDelay: `${Math.random() * 4}s`,
-              animationDuration: `${5 + Math.random() * 5}s`,
+              left: `${10 + (i * 7) % 80}%`,
+              top: `${5 + (i * 11) % 85}%`,
+              fontSize: `${12 + (i % 4) * 4}px`,
+              animationDelay: `${i * 0.5}s`,
+              animationDuration: `${5 + (i % 3) * 2}s`,
             }}
           >
             💕
@@ -98,16 +102,17 @@ const OrbitingContent = () => {
         </p>
       </div>
 
-      {/* Orbit container - centers everything */}
+      {/* ========== MAIN ORBIT CONTAINER ========== */}
+      {/* This container centers everything and holds the video + orbiting elements */}
       <div className="relative flex items-center justify-center">
         
         {/* ========== YOUTUBE VIDEO (CENTER) ========== */}
-        <div className="relative z-10 video-container">
+        {/* Video dimensions: Mobile ~224x126, Tablet ~320x180, Desktop ~384x216 */}
+        <div className="relative z-10">
           <div className="
             w-56 h-32 
-            sm:w-72 sm:h-40 
-            md:w-80 md:h-44 
-            lg:w-96 lg:h-56
+            sm:w-80 sm:h-[180px] 
+            lg:w-96 lg:h-[216px]
             rounded-2xl overflow-hidden 
             bg-card
             video-glow
@@ -123,80 +128,93 @@ const OrbitingContent = () => {
           </div>
         </div>
 
-        {/* ========== ORBITING PHOTOS (INNER RING) ========== */}
-        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-          <div 
-            className="photo-orbit-container"
-            style={{
-              '--photo-count': visiblePhotos.length,
-              '--orbit-duration': '40s',
-            } as React.CSSProperties}
-          >
-            {visiblePhotos.map((photo, index) => {
-              // Calculate angle for equal spacing: 360° / number of photos
-              const angle = (360 / visiblePhotos.length) * index;
-              // Slight random rotation for natural polaroid look
-              const tilt = (index % 2 === 0 ? 1 : -1) * (3 + (index % 3) * 2);
-              
-              return (
-                <div
-                  key={photo.id}
-                  className="photo-orbit-item animate-float"
+        {/* ========== PHOTO ORBIT RING ========== */}
+        {/* 
+          Orbit Geometry:
+          - 5 photos with 72° spacing (360/5)
+          - Orbit radius = video half-diagonal + safe zone (40px) + half photo size
+          - Photos stay upright using counter-rotation: rotate(angle) translate(r) rotate(-angle)
+        */}
+        <div 
+          className="absolute inset-0 flex items-center justify-center pointer-events-none"
+          style={{
+            // Orbit ring rotates continuously
+            animation: `orbit-rotate ${ORBIT_DURATION}s linear infinite`,
+          }}
+        >
+          {photos.map((photo, index) => {
+            // Calculate this photo's angle: 0°, 72°, 144°, 216°, 288°
+            const angle = angleGap * index;
+            
+            return (
+              <div
+                key={photo.id}
+                className="absolute photo-orbit-position"
+                style={{
+                  // Position on orbit circle
+                  '--photo-angle': `${angle}deg`,
+                } as React.CSSProperties}
+              >
+                {/* Counter-rotation wrapper to keep photo upright */}
+                <div 
+                  className="photo-counter-rotate"
                   style={{
-                    '--angle': `${angle}deg`,
-                    '--photo-radius': `clamp(100px, 25vw, ${orbitConfig.photoRadius}px)`,
-                    animationDelay: `${index * 0.4}s`,
-                    animationDuration: `${4 + (index % 3)}s`,
-                  } as React.CSSProperties}
+                    animation: `orbit-counter-rotate ${ORBIT_DURATION}s linear infinite`,
+                  }}
                 >
                   <Polaroid 
                     src={photo.src} 
-                    alt={photo.alt} 
-                    rotation={tilt}
+                    alt={photo.alt}
                   />
                 </div>
-              );
-            })}
-          </div>
+              </div>
+            );
+          })}
         </div>
 
-        {/* ========== ORBITING TEXT (OUTER RING) ========== */}
-        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-          <div 
-            className="text-orbit-container"
-            style={{
-              '--text-count': textSnippets.length,
-              '--orbit-duration': '55s',
-            } as React.CSSProperties}
-          >
-            {textSnippets.map((snippet, index) => {
-              const angle = (360 / textSnippets.length) * index;
-              
-              return (
-                <div
-                  key={snippet.id}
-                  className="text-orbit-item"
+        {/* ========== TEXT ORBIT RING (OUTER) ========== */}
+        {/* 
+          Text orbits on a larger radius than photos
+          Rotates in opposite direction for visual interest
+        */}
+        <div 
+          className="absolute inset-0 flex items-center justify-center pointer-events-none"
+          style={{
+            animation: `orbit-rotate-reverse ${ORBIT_DURATION + 15}s linear infinite`,
+          }}
+        >
+          {textSnippets.map((snippet, index) => {
+            const angle = (360 / textSnippets.length) * index;
+            
+            return (
+              <div
+                key={snippet.id}
+                className="absolute text-orbit-position"
+                style={{
+                  '--text-angle': `${angle}deg`,
+                } as React.CSSProperties}
+              >
+                {/* Counter-rotation to keep text readable */}
+                <div 
                   style={{
-                    '--angle': `${angle}deg`,
-                    '--text-radius': `clamp(160px, 40vw, ${orbitConfig.textRadius}px)`,
-                  } as React.CSSProperties}
+                    animation: `orbit-counter-rotate-reverse ${ORBIT_DURATION + 15}s linear infinite`,
+                  }}
                 >
                   <div className="
                     floating-text 
-                    text-sm sm:text-base md:text-lg lg:text-xl 
+                    text-sm sm:text-base md:text-lg
                     whitespace-nowrap 
                     px-3 py-1.5 sm:px-4 sm:py-2
-                    bg-card/70 backdrop-blur-sm 
+                    bg-card/80 backdrop-blur-sm 
                     rounded-full 
                     shadow-md
-                    text-fade
                   ">
                     {snippet.text}
                   </div>
                 </div>
-              );
-            })}
-          </div>
+              </div>
+            );
+          })}
         </div>
       </div>
     </div>

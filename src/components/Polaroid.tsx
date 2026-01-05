@@ -1,35 +1,35 @@
 interface PolaroidProps {
   src: string;
   alt: string;
-  rotation?: number;
   className?: string;
 }
 
 /**
  * Polaroid Component
  * 
- * Displays an image in a polaroid-style frame with soft shadow.
- * Size is responsive and controlled by parent container.
+ * Displays an image in a polaroid-style frame.
+ * Size is responsive:
+ * - Mobile: 60-70px wide
+ * - Desktop: 90-110px wide
  * 
  * TO REPLACE IMAGES:
  * 1. Import your image: import myPhoto from '@/assets/my-photo.jpg';
  * 2. Pass it to the src prop: <Polaroid src={myPhoto} alt="Description" />
  */
 
-const Polaroid = ({ src, alt, rotation = 0, className = '' }: PolaroidProps) => {
+const Polaroid = ({ src, alt, className = '' }: PolaroidProps) => {
   return (
     <div 
       className={`
         polaroid 
-        w-16 h-20 
-        sm:w-20 sm:h-24 
-        md:w-24 md:h-28 
+        w-[65px] h-[80px]
+        sm:w-[85px] sm:h-[100px]
+        lg:w-[100px] lg:h-[120px]
         flex-shrink-0
         ${className}
       `}
-      style={{ transform: `rotate(${rotation}deg)` }}
     >
-      <div className="w-full h-12 sm:h-16 md:h-20 overflow-hidden rounded-sm bg-muted">
+      <div className="w-full h-[50px] sm:h-[65px] lg:h-[80px] overflow-hidden rounded-sm bg-muted">
         <img 
           src={src} 
           alt={alt}
