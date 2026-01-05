@@ -1,14 +1,25 @@
 import { useState } from 'react';
 import GiftBox from '@/components/GiftBox';
 import OrbitingContent from '@/components/OrbitingContent';
+import MusicToggle from '@/components/MusicToggle';
 
 /**
- * Birthday Surprise Page
+ * =============================================================================
+ * BIRTHDAY SURPRISE - MAIN PAGE
+ * =============================================================================
  * 
- * Two states:
- * 1. Gift Box (closed) - Shows shaking gift box with birthday message
- * 2. Main Content (opened) - Shows video with orbiting photos and text
+ * This page has two states:
+ * 1. CLOSED STATE: Shaking gift box with birthday message
+ * 2. OPENED STATE: YouTube video with orbiting photos and romantic text
+ * 
+ * CUSTOMIZATION FILES:
+ * - Photos & YouTube: src/components/OrbitingContent.tsx
+ * - Music: src/components/MusicToggle.tsx
+ * - Colors & Animations: src/index.css
+ * - Birthday message: src/components/GiftBox.tsx
+ * =============================================================================
  */
+
 const Index = () => {
   const [isOpened, setIsOpened] = useState(false);
 
@@ -18,14 +29,17 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-romantic overflow-hidden">
-      {/* Closed state - Gift Box */}
+      {/* Music toggle button - always visible */}
+      <MusicToggle />
+
+      {/* CLOSED STATE - Gift Box */}
       {!isOpened && (
         <div className="min-h-screen flex items-center justify-center p-4">
           <GiftBox onOpen={handleOpen} />
         </div>
       )}
 
-      {/* Opened state - Main Content */}
+      {/* OPENED STATE - Main Content with orbiting elements */}
       {isOpened && (
         <div className="animate-content-reveal">
           <OrbitingContent />
