@@ -5,10 +5,10 @@ import Polaroid from './Polaroid';
  * ORBITING CONTENT - CUSTOMIZATION GUIDE
  * =============================================================================
  * 
- * PHOTOS:
- * - Exactly 5 photos are displayed (edit the photos array below)
+ * PHOTOS + CAPTIONS:
+ * - Exactly 5 photo+caption pairs are displayed
+ * - Each photo has one caption that moves with it
  * - To use your own images: import photo1 from '@/assets/photo1.jpg';
- * - Then replace the URL in the array with your imported variable
  * 
  * YOUTUBE VIDEO:
  * - Change YOUTUBE_EMBED_URL to your video's embed link
@@ -16,10 +16,7 @@ import Polaroid from './Polaroid';
  * 
  * ORBIT SETTINGS:
  * - ORBIT_DURATION: Time for one full rotation (default: 25s)
- * - Orbit radius is calculated automatically based on video size + safe zone
- * 
- * TEXT SNIPPETS:
- * - Edit the textSnippets array to change the floating messages
+ * - Orbit radius is set in index.css via --photo-orbit-radius
  * =============================================================================
  */
 
@@ -29,61 +26,60 @@ const YOUTUBE_EMBED_URL = 'https://www.youtube.com/embed/dQw4w9WgXcQ';
 // ========== ORBIT ANIMATION DURATION (seconds) ==========
 const ORBIT_DURATION = 25;
 
-// ========== EXACTLY 5 PHOTOS - REPLACE WITH YOUR OWN ==========
-const photos = [
+// ==========================================================================
+// EXACTLY 5 PHOTO + CAPTION PAIRS - CUSTOMIZE HERE
+// ==========================================================================
+const photoItems = [
   { 
     id: 1, 
     src: 'https://images.unsplash.com/photo-1518495973542-4542c06a5843?w=200&h=200&fit=crop', 
-    alt: 'Memory 1' 
+    alt: 'Memory 1',
+    caption: 'My favorite person 💚'
   },
   { 
     id: 2, 
     src: 'https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=200&h=200&fit=crop', 
-    alt: 'Memory 2' 
+    alt: 'Memory 2',
+    caption: 'Us >>> everything'
   },
   { 
     id: 3, 
     src: 'https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=200&h=200&fit=crop', 
-    alt: 'Memory 3' 
+    alt: 'Memory 3',
+    caption: 'Happy You Day ✨'
   },
   { 
     id: 4, 
     src: 'https://images.unsplash.com/photo-1447752875215-b2761acb3c5d?w=200&h=200&fit=crop', 
-    alt: 'Memory 4' 
+    alt: 'Memory 4',
+    caption: 'Forever yours 💕'
   },
   { 
     id: 5, 
     src: 'https://images.unsplash.com/photo-1433086966358-54859d0ed716?w=200&h=200&fit=crop', 
-    alt: 'Memory 5' 
+    alt: 'Memory 5',
+    caption: 'Best memories 🥰'
   },
 ];
 
-// ========== ROMANTIC TEXT SNIPPETS ==========
-const textSnippets = [
-  { id: 1, text: "My favorite person 💚" },
-  { id: 2, text: "Us >>> everything" },
-  { id: 3, text: "Happy You Day ✨" },
-  { id: 4, text: "Forever yours 💕" },
-];
-
 const OrbitingContent = () => {
-  // Calculate angle for each photo: 360° / 5 = 72° between each
-  const angleGap = 360 / photos.length; // 72 degrees
+  // 5 photos with 72° spacing (360/5)
+  const angleGap = 360 / photoItems.length;
 
   return (
     <div className="relative w-full min-h-screen flex items-center justify-center overflow-hidden">
       
-      {/* Background floating hearts - subtle decoration */}
+      {/* Subtle background hearts */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
-        {[...Array(12)].map((_, i) => (
+        {[...Array(8)].map((_, i) => (
           <div
             key={i}
             className="absolute text-love-pink opacity-10 animate-float"
             style={{
-              left: `${10 + (i * 7) % 80}%`,
-              top: `${5 + (i * 11) % 85}%`,
-              fontSize: `${12 + (i % 4) * 4}px`,
-              animationDelay: `${i * 0.5}s`,
+              left: `${10 + (i * 10) % 80}%`,
+              top: `${10 + (i * 12) % 80}%`,
+              fontSize: `${14 + (i % 3) * 4}px`,
+              animationDelay: `${i * 0.7}s`,
               animationDuration: `${5 + (i % 3) * 2}s`,
             }}
           >
@@ -103,11 +99,9 @@ const OrbitingContent = () => {
       </div>
 
       {/* ========== MAIN ORBIT CONTAINER ========== */}
-      {/* This container centers everything and holds the video + orbiting elements */}
       <div className="relative flex items-center justify-center">
         
-        {/* ========== YOUTUBE VIDEO (CENTER) ========== */}
-        {/* Video dimensions: Mobile ~224x126, Tablet ~320x180, Desktop ~384x216 */}
+        {/* ========== YOUTUBE VIDEO (CENTER - PROTECTED ZONE) ========== */}
         <div className="relative z-10">
           <div className="
             w-56 h-32 
@@ -128,89 +122,43 @@ const OrbitingContent = () => {
           </div>
         </div>
 
-        {/* ========== PHOTO ORBIT RING ========== */}
-        {/* 
-          Orbit Geometry:
-          - 5 photos with 72° spacing (360/5)
-          - Orbit radius = video half-diagonal + safe zone (40px) + half photo size
-          - Photos stay upright using counter-rotation: rotate(angle) translate(r) rotate(-angle)
+        {/* ==========================================================================
+            SINGLE ORBIT RING - Photo+Caption Pairs
+            ==========================================================================
+            - 5 pairs evenly spaced at 72° intervals
+            - Entire ring rotates, not individual elements
+            - Photos stay upright via counter-rotation
+            - Captions are attached to photos, moving as one unit
         */}
         <div 
           className="absolute inset-0 flex items-center justify-center pointer-events-none"
           style={{
-            // Orbit ring rotates continuously
             animation: `orbit-rotate ${ORBIT_DURATION}s linear infinite`,
           }}
         >
-          {photos.map((photo, index) => {
-            // Calculate this photo's angle: 0°, 72°, 144°, 216°, 288°
+          {photoItems.map((item, index) => {
+            // Calculate angle: 0°, 72°, 144°, 216°, 288°
             const angle = angleGap * index;
             
             return (
               <div
-                key={photo.id}
-                className="absolute photo-orbit-position"
+                key={item.id}
+                className="absolute orbit-item-position"
                 style={{
-                  // Position on orbit circle
-                  '--photo-angle': `${angle}deg`,
+                  '--item-angle': `${angle}deg`,
                 } as React.CSSProperties}
               >
-                {/* Counter-rotation wrapper to keep photo upright */}
+                {/* Counter-rotation wrapper keeps photo+caption upright */}
                 <div 
-                  className="photo-counter-rotate"
                   style={{
                     animation: `orbit-counter-rotate ${ORBIT_DURATION}s linear infinite`,
                   }}
                 >
                   <Polaroid 
-                    src={photo.src} 
-                    alt={photo.alt}
+                    src={item.src} 
+                    alt={item.alt}
+                    caption={item.caption}
                   />
-                </div>
-              </div>
-            );
-          })}
-        </div>
-
-        {/* ========== TEXT ORBIT RING (OUTER) ========== */}
-        {/* 
-          Text orbits on a larger radius than photos
-          Rotates in opposite direction for visual interest
-        */}
-        <div 
-          className="absolute inset-0 flex items-center justify-center pointer-events-none"
-          style={{
-            animation: `orbit-rotate-reverse ${ORBIT_DURATION + 15}s linear infinite`,
-          }}
-        >
-          {textSnippets.map((snippet, index) => {
-            const angle = (360 / textSnippets.length) * index;
-            
-            return (
-              <div
-                key={snippet.id}
-                className="absolute text-orbit-position"
-                style={{
-                  '--text-angle': `${angle}deg`,
-                } as React.CSSProperties}
-              >
-                {/* Counter-rotation to keep text readable */}
-                <div 
-                  style={{
-                    animation: `orbit-counter-rotate-reverse ${ORBIT_DURATION + 15}s linear infinite`,
-                  }}
-                >
-                  <div className="
-                    floating-text 
-                    text-sm sm:text-base md:text-lg
-                    whitespace-nowrap 
-                    px-3 py-1.5 sm:px-4 sm:py-2
-                    bg-card/80 backdrop-blur-sm 
-                    rounded-full 
-                    shadow-md
-                  ">
-                    {snippet.text}
-                  </div>
                 </div>
               </div>
             );

@@ -1,42 +1,48 @@
 interface PolaroidProps {
   src: string;
   alt: string;
-  className?: string;
+  caption?: string;
 }
 
 /**
  * Polaroid Component
  * 
- * Displays an image in a polaroid-style frame.
+ * Displays an image in a polaroid-style frame with optional caption.
+ * Photo + caption move together as a single unit.
+ * 
  * Size is responsive:
  * - Mobile: 60-70px wide
  * - Desktop: 90-110px wide
  * 
  * TO REPLACE IMAGES:
  * 1. Import your image: import myPhoto from '@/assets/my-photo.jpg';
- * 2. Pass it to the src prop: <Polaroid src={myPhoto} alt="Description" />
+ * 2. Pass it to the src prop: <Polaroid src={myPhoto} alt="Description" caption="Your text" />
  */
 
-const Polaroid = ({ src, alt, className = '' }: PolaroidProps) => {
+const Polaroid = ({ src, alt, caption }: PolaroidProps) => {
   return (
-    <div 
-      className={`
-        polaroid 
-        w-[65px] h-[80px]
-        sm:w-[85px] sm:h-[100px]
-        lg:w-[100px] lg:h-[120px]
-        flex-shrink-0
-        ${className}
-      `}
-    >
-      <div className="w-full h-[50px] sm:h-[65px] lg:h-[80px] overflow-hidden rounded-sm bg-muted">
-        <img 
-          src={src} 
+    <div className="polaroid-container">
+      {/* Photo frame */}
+      <div className="polaroid">
+        <img
+          src={src}
           alt={alt}
-          className="w-full h-full object-cover"
+          className="
+            w-[60px] h-[60px]
+            sm:w-[80px] sm:h-[80px]
+            lg:w-[100px] lg:h-[100px]
+            object-cover rounded-sm
+          "
           loading="lazy"
         />
       </div>
+      
+      {/* Caption attached below photo */}
+      {caption && (
+        <div className="polaroid-caption">
+          {caption}
+        </div>
+      )}
     </div>
   );
 };
