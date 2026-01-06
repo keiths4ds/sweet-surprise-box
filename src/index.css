@@ -68,10 +68,9 @@
     --shadow-video-glow: 0 0 60px 10px hsl(var(--rose) / 0.2), 0 0 100px 20px hsl(var(--blush) / 0.1);
 
     /* ========== ORBIT CONFIGURATION ========== */
-    /* Adjust these values to change orbit sizes */
-    /* Photo orbit: should be large enough to maintain 30-40px gap from video */
-    --photo-orbit-radius: 180px;
-    --text-orbit-radius: 280px;
+    /* Single orbit ring for photo+caption pairs */
+    /* Must be > (video width / 2) + photo size + 40px safe gap */
+    --orbit-radius: 200px;
 
     /* Sidebar defaults */
     --sidebar-background: 0 0% 98%;
@@ -88,24 +87,22 @@
   }
 
   /* ========== RESPONSIVE ORBIT ADJUSTMENTS ========== */
+  /* Orbit radius must maintain 40px+ gap from video edge */
   @media (max-width: 640px) {
     :root {
-      --photo-orbit-radius: 130px;
-      --text-orbit-radius: 200px;
+      --orbit-radius: 140px;
     }
   }
 
   @media (min-width: 641px) and (max-width: 1024px) {
     :root {
-      --photo-orbit-radius: 160px;
-      --text-orbit-radius: 250px;
+      --orbit-radius: 180px;
     }
   }
 
   @media (min-width: 1025px) {
     :root {
-      --photo-orbit-radius: 200px;
-      --text-orbit-radius: 320px;
+      --orbit-radius: 220px;
     }
   }
 
@@ -171,13 +168,41 @@
     box-shadow: 0 25px 70px -15px hsl(var(--rose) / 0.4);
   }
 
-  /* ========== POLAROID FRAME ========== */
+  /* ========== POLAROID CONTAINER (Photo + Caption as one unit) ========== */
+  .polaroid-container {
+    @apply flex flex-col items-center;
+  }
+
   .polaroid {
     @apply bg-card;
-    padding: 6px;
-    padding-bottom: 20px;
+    padding: 4px;
     box-shadow: var(--shadow-polaroid);
     border-radius: 4px;
+  }
+
+  .polaroid-caption {
+    @apply text-center whitespace-nowrap mt-1;
+    font-family: 'Dancing Script', cursive;
+    font-size: 10px;
+    color: hsl(var(--primary-foreground));
+    text-shadow: 0 1px 4px hsl(var(--rose) / 0.2);
+    max-width: 90px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  @media (min-width: 640px) {
+    .polaroid-caption {
+      font-size: 12px;
+      max-width: 110px;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .polaroid-caption {
+      font-size: 14px;
+      max-width: 130px;
+    }
   }
 
   /* ========== VIDEO GLOW ========== */
@@ -193,59 +218,38 @@
   }
 
   /* ==========================================================================
-     ORBIT SYSTEM - PHOTO RING
+     ORBIT SYSTEM - Single ring for Photo+Caption pairs
      ==========================================================================
-     Photos are positioned using: rotate(angle) translate(radius) rotate(-angle)
-     This keeps photos upright while orbiting around the center.
+     Each item is positioned using: rotate(angle) translate(radius) rotate(-angle)
+     This keeps items upright while the entire ring rotates.
      
-     To adjust orbit size: Change --photo-orbit-radius in :root
+     To adjust orbit size: Change --orbit-radius in :root
   */
-  .photo-orbit-position {
+  .orbit-item-position {
     position: absolute;
     left: 50%;
     top: 50%;
-    margin-left: -32px; /* Half of photo width for centering */
-    margin-top: -40px;  /* Half of photo height for centering */
+    /* Center the item on the orbit path */
+    margin-left: -38px;
+    margin-top: -50px;
     transform: 
-      rotate(var(--photo-angle, 0deg)) 
-      translateX(var(--photo-orbit-radius)) 
-      rotate(calc(-1 * var(--photo-angle, 0deg)));
+      rotate(var(--item-angle, 0deg)) 
+      translateX(var(--orbit-radius)) 
+      rotate(calc(-1 * var(--item-angle, 0deg)));
   }
 
   @media (min-width: 640px) {
-    .photo-orbit-position {
-      margin-left: -42px;
-      margin-top: -50px;
-    }
-  }
-
-  @media (min-width: 1024px) {
-    .photo-orbit-position {
-      margin-left: -50px;
+    .orbit-item-position {
+      margin-left: -48px;
       margin-top: -60px;
     }
   }
 
-  /* Counter-rotation to keep photos upright during orbit */
-  .photo-counter-rotate {
-    /* This will be animated via inline style */
-  }
-
-  /* ==========================================================================
-     ORBIT SYSTEM - TEXT RING (OUTER)
-     ==========================================================================
-     Text snippets orbit on a larger radius than photos.
-     
-     To adjust orbit size: Change --text-orbit-radius in :root
-  */
-  .text-orbit-position {
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: 
-      rotate(var(--text-angle, 0deg)) 
-      translateX(var(--text-orbit-radius)) 
-      rotate(calc(-1 * var(--text-angle, 0deg)));
+  @media (min-width: 1024px) {
+    .orbit-item-position {
+      margin-left: -58px;
+      margin-top: -70px;
+    }
   }
 }
 
