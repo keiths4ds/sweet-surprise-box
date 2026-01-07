@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Polaroid from './Polaroid';
 
 /**
@@ -26,6 +26,9 @@ const YOUTUBE_EMBED_URL = 'https://www.youtube.com/embed/dQw4w9WgXcQ';
 
 // ========== ORBIT ANIMATION DURATION (seconds) ==========
 const ORBIT_DURATION = 25;
+
+// ========== SMILE BUTTON DELAY (seconds after reveal) ==========
+const SMILE_BUTTON_DELAY = 7;
 
 // ==========================================================================
 // EXACTLY 5 PHOTO + CAPTION PAIRS - CUSTOMIZE HERE
@@ -69,16 +72,40 @@ const photoItems = [
 const SMILE_BUTTON_TEXT = "If you're smiling right now, click this 💚";
 const SMILE_MESSAGE_LINE1 = "Good. That's all I wanted today.";
 const SMILE_MESSAGE_LINE2 = "— Key 💚";
+const SMILE_CONTINUE_HINT = "Click anywhere to continue";
 
 const OrbitingContent = () => {
   // 5 photos with 72° spacing (360/5)
   const angleGap = 360 / photoItems.length;
   
   // ========== SMILE INTERACTION STATE ==========
-  const [hasSmiled, setHasSmiled] = useState(false);
+  // showButton: delayed appearance after reveal
+  // isOrbitPaused: controls animation pause/resume
+  // showSmileMessage: controls message visibility
+  const [showButton, setShowButton] = useState(false);
+  const [isOrbitPaused, setIsOrbitPaused] = useState(false);
+  const [showSmileMessage, setShowSmileMessage] = useState(false);
 
+  // ========== DELAYED BUTTON APPEARANCE ==========
+  // Button appears 7 seconds after component mounts (reveal animations finish)
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setShowButton(true);
+    }, SMILE_BUTTON_DELAY * 1000);
+    
+    return () => clearTimeout(timer);
+  }, []);
+
+  // ========== PAUSE ORBIT & SHOW MESSAGE ==========
   const handleSmileClick = () => {
-    setHasSmiled(true);
+    setIsOrbitPaused(true);
+    setShowSmileMessage(true);
+  };
+
+  // ========== RESUME ORBIT & HIDE MESSAGE ==========
+  const handleContinueClick = () => {
+    setShowSmileMessage(false);
+    setIsOrbitPaused(false);
   };
 
   return (
@@ -145,12 +172,13 @@ const OrbitingContent = () => {
             - Photos stay upright via counter-rotation
             - Captions are attached to photos, moving as one unit
             - Animation pauses when user clicks "smile" button
+            - Resumes when user clicks anywhere to continue
         */}
         <div 
           className="absolute inset-0 flex items-center justify-center pointer-events-none"
           style={{
             animation: `orbit-rotate ${ORBIT_DURATION}s linear infinite`,
-            animationPlayState: hasSmiled ? 'paused' : 'running',
+            animationPlayState: isOrbitPaused ? 'paused' : 'running',
           }}
         >
           {photoItems.map((item, index) => {
@@ -169,7 +197,7 @@ const OrbitingContent = () => {
                 <div 
                   style={{
                     animation: `orbit-counter-rotate ${ORBIT_DURATION}s linear infinite`,
-                    animationPlayState: hasSmiled ? 'paused' : 'running',
+                    animationPlayState: isOrbitPaused ? 'paused' : 'running',
                   }}
                 >
                   <Polaroid 
@@ -185,44 +213,54 @@ const OrbitingContent = () => {
       </div>
 
       {/* ==========================================================================
-          "IF YOU'RE SMILING" BUTTON + MESSAGE
+          "IF YOU'RE SMILING" BUTTON
           ==========================================================================
-          - Shows a subtle button below the video
-          - On click: pauses orbit, shows intimate message
-          - Works only once per page load
+          - Appears after delay (SMILE_BUTTON_DELAY seconds)
+          - Fades in smoothly with upward motion
+          - Hidden when message is showing
       */}
-      <div className="absolute bottom-8 sm:bottom-12 left-1/2 -translate-x-1/2 text-center z-20 px-4">
-        {/* Smile message - appears after button click */}
-        {hasSmiled && (
-          <div className="smile-message mb-6">
-            <p className="font-handwritten text-xl sm:text-2xl text-primary-foreground leading-relaxed">
+      {showButton && !showSmileMessage && (
+        <div className="absolute bottom-8 sm:bottom-12 left-1/2 -translate-x-1/2 text-center z-20 px-4">
+          <button
+            onClick={handleSmileClick}
+            className="smile-button-appear smile-button px-6 py-3 rounded-full font-body text-sm sm:text-base transition-all duration-300 hover:scale-105 cursor-pointer"
+          >
+            {SMILE_BUTTON_TEXT}
+          </button>
+        </div>
+      )}
+
+      {/* ==========================================================================
+          SMILE MESSAGE OVERLAY (GLASSMORPHISM)
+          ==========================================================================
+          - Higher z-index than photos and video
+          - Semi-transparent blurred backdrop for readability
+          - Click anywhere to dismiss and resume orbit
+      */}
+      {showSmileMessage && (
+        <div 
+          className="fixed inset-0 z-50 flex items-center justify-center cursor-pointer"
+          onClick={handleContinueClick}
+        >
+          {/* Subtle backdrop dim */}
+          <div className="absolute inset-0 bg-background/30 backdrop-blur-sm" />
+          
+          {/* Glassmorphism message card */}
+          <div className="smile-message-card relative z-10 mx-4 px-8 py-10 sm:px-12 sm:py-12 rounded-3xl text-center max-w-md">
+            <p className="font-handwritten text-2xl sm:text-3xl text-primary-foreground leading-relaxed">
               {SMILE_MESSAGE_LINE1}
             </p>
-            <p className="font-handwritten text-lg sm:text-xl text-muted-foreground mt-2">
+            <p className="font-handwritten text-xl sm:text-2xl text-muted-foreground mt-4">
               {SMILE_MESSAGE_LINE2}
             </p>
+            
+            {/* Continue hint */}
+            <p className="font-body text-xs sm:text-sm text-muted-foreground/70 mt-8">
+              {SMILE_CONTINUE_HINT}
+            </p>
           </div>
-        )}
-
-        {/* Smile button - fades after click */}
-        <button
-          onClick={handleSmileClick}
-          disabled={hasSmiled}
-          className={`
-            smile-button
-            px-6 py-3 
-            rounded-full 
-            font-body text-sm sm:text-base
-            transition-all duration-500 ease-out
-            ${hasSmiled 
-              ? 'opacity-40 cursor-default' 
-              : 'hover:scale-105 cursor-pointer'
-            }
-          `}
-        >
-          {SMILE_BUTTON_TEXT}
-        </button>
-      </div>
+        </div>
+      )}
     </div>
   );
 };
