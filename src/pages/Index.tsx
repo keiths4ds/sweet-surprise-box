@@ -1,30 +1,46 @@
 import { useState } from 'react';
+import ScrollMessage from '@/components/ScrollMessage';
 import GiftBox from '@/components/GiftBox';
 import OrbitingContent from '@/components/OrbitingContent';
 import MusicToggle from '@/components/MusicToggle';
 
 /**
  * =============================================================================
- * BIRTHDAY SURPRISE - MAIN PAGE
+ * BIRTHDAY SURPRISE - MAIN PAGE (3-Stage Reveal Experience)
  * =============================================================================
  * 
- * This page has two states:
- * 1. CLOSED STATE: Shaking gift box with birthday message
- * 2. OPENED STATE: YouTube video with orbiting photos and romantic text
+ * STAGE 1 (scrollClosed → scrollOpen): Parchment scroll with message
+ * STAGE 2 (gift): Shaking gift box with birthday message  
+ * STAGE 3 (reveal): YouTube video with orbiting photos
+ * 
+ * User flow is strictly linear: scroll → gift box → reveal
  * 
  * CUSTOMIZATION FILES:
+ * - Scroll message: src/components/ScrollMessage.tsx
+ * - Gift box text: src/components/GiftBox.tsx
  * - Photos & YouTube: src/components/OrbitingContent.tsx
  * - Music: src/components/MusicToggle.tsx
  * - Colors & Animations: src/index.css
- * - Birthday message: src/components/GiftBox.tsx
  * =============================================================================
  */
 
-const Index = () => {
-  const [isOpened, setIsOpened] = useState(false);
+/* ========== STAGE TYPES ========== */
+type Stage = 'scroll' | 'gift' | 'reveal';
 
-  const handleOpen = () => {
-    setIsOpened(true);
+const Index = () => {
+  /* ========== STAGE STATE ========== */
+  /* Controls which layer is currently visible */
+  const [currentStage, setCurrentStage] = useState<Stage>('scroll');
+
+  /* ========== STAGE TRANSITION HANDLERS ========== */
+  const handleScrollComplete = () => {
+    // Transition from scroll to gift box
+    setCurrentStage('gift');
+  };
+
+  const handleGiftOpen = () => {
+    // Transition from gift box to reveal
+    setCurrentStage('reveal');
   };
 
   return (
@@ -32,15 +48,22 @@ const Index = () => {
       {/* Music toggle button - always visible */}
       <MusicToggle />
 
-      {/* CLOSED STATE - Gift Box */}
-      {!isOpened && (
-        <div className="min-h-screen flex items-center justify-center p-4">
-          <GiftBox onOpen={handleOpen} />
+      {/* ========== STAGE 1: SCROLL MESSAGE ========== */}
+      {currentStage === 'scroll' && (
+        <div className="animate-fade-in">
+          <ScrollMessage onComplete={handleScrollComplete} />
         </div>
       )}
 
-      {/* OPENED STATE - Main Content with orbiting elements */}
-      {isOpened && (
+      {/* ========== STAGE 2: GIFT BOX ========== */}
+      {currentStage === 'gift' && (
+        <div className="min-h-screen flex items-center justify-center p-4 animate-stage-enter">
+          <GiftBox onOpen={handleGiftOpen} />
+        </div>
+      )}
+
+      {/* ========== STAGE 3: VIDEO + ORBITING PHOTOS ========== */}
+      {currentStage === 'reveal' && (
         <div className="animate-content-reveal">
           <OrbitingContent />
         </div>
