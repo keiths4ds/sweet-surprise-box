@@ -601,4 +601,40 @@
       margin-top: 32px;
     }
   }
+
+  /* ==========================================================================
+     "IF YOU'RE SMILING" BUTTON & MESSAGE STYLES
+     ==========================================================================
+     Calm, intimate, non-dramatic styling
+  */
+
+  /* Smile button - soft, minimal, subtle hover glow */
+  .smile-button {
+    background: hsl(var(--card) / 0.9);
+    color: hsl(var(--foreground));
+    border: 1px solid hsl(var(--border));
+    box-shadow: 0 2px 12px -2px hsl(var(--rose) / 0.15);
+  }
+
+  .smile-button:not(:disabled):hover {
+    background: hsl(var(--card));
+    box-shadow: 0 4px 20px -4px hsl(var(--accent) / 0.3);
+    border-color: hsl(var(--accent) / 0.5);
+  }
+
+  /* Smile message - gentle fade + upward motion */
+  .smile-message {
+    animation: smile-message-appear 0.8s ease-out forwards;
+  }
+
+  @keyframes smile-message-appear {
+    0% {
+      opacity: 0;
+      transform: translateY(12px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
 }

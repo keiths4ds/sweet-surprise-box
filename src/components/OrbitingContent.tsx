@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import Polaroid from './Polaroid';
 
 /**
@@ -62,9 +63,23 @@ const photoItems = [
   },
 ];
 
+// ==========================================================================
+// "IF YOU'RE SMILING" MESSAGE - CUSTOMIZE HERE
+// ==========================================================================
+const SMILE_BUTTON_TEXT = "If you're smiling right now, click this 💚";
+const SMILE_MESSAGE_LINE1 = "Good. That's all I wanted today.";
+const SMILE_MESSAGE_LINE2 = "— Key 💚";
+
 const OrbitingContent = () => {
   // 5 photos with 72° spacing (360/5)
   const angleGap = 360 / photoItems.length;
+  
+  // ========== SMILE INTERACTION STATE ==========
+  const [hasSmiled, setHasSmiled] = useState(false);
+
+  const handleSmileClick = () => {
+    setHasSmiled(true);
+  };
 
   return (
     <div className="relative w-full min-h-screen flex items-center justify-center overflow-hidden">
@@ -129,11 +144,13 @@ const OrbitingContent = () => {
             - Entire ring rotates, not individual elements
             - Photos stay upright via counter-rotation
             - Captions are attached to photos, moving as one unit
+            - Animation pauses when user clicks "smile" button
         */}
         <div 
           className="absolute inset-0 flex items-center justify-center pointer-events-none"
           style={{
             animation: `orbit-rotate ${ORBIT_DURATION}s linear infinite`,
+            animationPlayState: hasSmiled ? 'paused' : 'running',
           }}
         >
           {photoItems.map((item, index) => {
@@ -152,6 +169,7 @@ const OrbitingContent = () => {
                 <div 
                   style={{
                     animation: `orbit-counter-rotate ${ORBIT_DURATION}s linear infinite`,
+                    animationPlayState: hasSmiled ? 'paused' : 'running',
                   }}
                 >
                   <Polaroid 
@@ -164,6 +182,46 @@ const OrbitingContent = () => {
             );
           })}
         </div>
+      </div>
+
+      {/* ==========================================================================
+          "IF YOU'RE SMILING" BUTTON + MESSAGE
+          ==========================================================================
+          - Shows a subtle button below the video
+          - On click: pauses orbit, shows intimate message
+          - Works only once per page load
+      */}
+      <div className="absolute bottom-8 sm:bottom-12 left-1/2 -translate-x-1/2 text-center z-20 px-4">
+        {/* Smile message - appears after button click */}
+        {hasSmiled && (
+          <div className="smile-message mb-6">
+            <p className="font-handwritten text-xl sm:text-2xl text-primary-foreground leading-relaxed">
+              {SMILE_MESSAGE_LINE1}
+            </p>
+            <p className="font-handwritten text-lg sm:text-xl text-muted-foreground mt-2">
+              {SMILE_MESSAGE_LINE2}
+            </p>
+          </div>
+        )}
+
+        {/* Smile button - fades after click */}
+        <button
+          onClick={handleSmileClick}
+          disabled={hasSmiled}
+          className={`
+            smile-button
+            px-6 py-3 
+            rounded-full 
+            font-body text-sm sm:text-base
+            transition-all duration-500 ease-out
+            ${hasSmiled 
+              ? 'opacity-40 cursor-default' 
+              : 'hover:scale-105 cursor-pointer'
+            }
+          `}
+        >
+          {SMILE_BUTTON_TEXT}
+        </button>
       </div>
     </div>
   );
