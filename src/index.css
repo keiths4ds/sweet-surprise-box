@@ -605,8 +605,26 @@
   /* ==========================================================================
      "IF YOU'RE SMILING" BUTTON & MESSAGE STYLES
      ==========================================================================
-     Calm, intimate, non-dramatic styling
+     - Button appears with delay, fades in smoothly
+     - Message uses glassmorphism for guaranteed readability
+     - All interactions feel gentle and non-intrusive
   */
+
+  /* Smile button - delayed fade-in appearance */
+  .smile-button-appear {
+    animation: smile-button-appear 0.8s ease-out forwards;
+  }
+
+  @keyframes smile-button-appear {
+    0% {
+      opacity: 0;
+      transform: translateY(12px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
 
   /* Smile button - soft, minimal, subtle hover glow */
   .smile-button {
@@ -616,25 +634,32 @@
     box-shadow: 0 2px 12px -2px hsl(var(--rose) / 0.15);
   }
 
-  .smile-button:not(:disabled):hover {
+  .smile-button:hover {
     background: hsl(var(--card));
     box-shadow: 0 4px 20px -4px hsl(var(--accent) / 0.3);
     border-color: hsl(var(--accent) / 0.5);
   }
 
-  /* Smile message - gentle fade + upward motion */
-  .smile-message {
-    animation: smile-message-appear 0.8s ease-out forwards;
+  /* Glassmorphism message card - guaranteed text visibility */
+  .smile-message-card {
+    background: hsl(var(--card) / 0.85);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid hsl(var(--border) / 0.5);
+    box-shadow: 
+      0 8px 32px -8px hsl(var(--foreground) / 0.1),
+      0 0 60px 10px hsl(var(--rose) / 0.1);
+    animation: smile-message-appear 0.6s ease-out forwards;
   }
 
   @keyframes smile-message-appear {
     0% {
       opacity: 0;
-      transform: translateY(12px);
+      transform: translateY(16px) scale(0.98);
     }
     100% {
       opacity: 1;
-      transform: translateY(0);
+      transform: translateY(0) scale(1);
     }
   }
 }
