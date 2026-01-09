@@ -142,11 +142,16 @@
 
   body {
     @apply bg-background text-foreground antialiased;
-    font-family: 'Quicksand', sans-serif;
+    /* Manrope - Body font: comfortable line height */
+    font-family: 'Manrope', sans-serif;
+    line-height: 1.5;
   }
 
+  /* Lemon Milk - Headings: uppercase, slight letter-spacing */
   h1, h2, h3, h4, h5, h6 {
-    font-family: 'Dancing Script', cursive;
+    font-family: 'LEMON MILK', sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
   }
 }
 
@@ -182,8 +187,10 @@
 
   .polaroid-caption {
     @apply text-center whitespace-nowrap mt-1;
-    font-family: 'Dancing Script', cursive;
+    /* Manrope for captions - warm and readable */
+    font-family: 'Manrope', sans-serif;
     font-size: 10px;
+    font-weight: 500;
     color: hsl(var(--primary-foreground));
     text-shadow: 0 1px 4px hsl(var(--rose) / 0.2);
     max-width: 90px;
@@ -212,7 +219,10 @@
 
   /* ========== FLOATING TEXT ========== */
   .floating-text {
-    font-family: 'Dancing Script', cursive;
+    /* Lemon Milk for emphasis text */
+    font-family: 'LEMON MILK', sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
     color: hsl(var(--primary-foreground));
     text-shadow: 0 2px 10px hsl(var(--rose) / 0.3);
   }
@@ -499,17 +509,20 @@
       inset -2px 0 8px hsl(35 30% 70% / 0.3);
   }
 
+  /* Scroll headline - Lemon Milk */
   .scroll-closed-text {
-    font-family: 'Dancing Script', cursive;
-    font-size: 1.1rem;
+    font-family: 'LEMON MILK', sans-serif;
+    font-size: 0.9rem;
     text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
     color: hsl(35 40% 30%);
-    line-height: 1.6;
+    line-height: 1.8;
   }
 
   @media (min-width: 640px) {
     .scroll-closed-text {
-      font-size: 1.3rem;
+      font-size: 1.1rem;
     }
   }
 
@@ -572,24 +585,26 @@
     margin: 0 auto;
   }
 
+  /* Scroll message body - Manrope for warm, readable text */
   .scroll-content p {
-    font-family: 'Dancing Script', cursive;
-    font-size: 1.15rem;
+    font-family: 'Manrope', sans-serif;
+    font-size: 1rem;
+    font-weight: 400;
     color: hsl(35 40% 25%);
-    line-height: 1.8;
+    line-height: 1.6;
     margin: 0;
   }
 
   @media (min-width: 640px) {
     .scroll-content p {
-      font-size: 1.4rem;
+      font-size: 1.15rem;
     }
   }
 
-  /* Hint text at bottom */
+  /* Hint text at bottom - Manrope */
   .scroll-hint {
     @apply text-center mt-8;
-    font-family: 'Quicksand', sans-serif;
+    font-family: 'Manrope', sans-serif;
     font-size: 0.85rem;
     color: hsl(var(--accent));
     font-weight: 500;

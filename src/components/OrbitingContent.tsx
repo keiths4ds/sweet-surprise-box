@@ -130,9 +130,9 @@ const OrbitingContent = () => {
         ))}
       </div>
 
-      {/* Title at top */}
+      {/* Title at top - Lemon Milk heading */}
       <div className="absolute top-6 sm:top-10 left-1/2 -translate-x-1/2 text-center z-20 px-4">
-        <h1 className="font-handwritten text-3xl sm:text-4xl md:text-5xl lg:text-6xl text-primary-foreground drop-shadow-sm">
+        <h1 className="font-heading text-xl sm:text-2xl md:text-3xl lg:text-4xl text-primary-foreground drop-shadow-sm tracking-wide">
           Happy Birthday! 🎂💚
         </h1>
         <p className="font-body text-muted-foreground mt-2 text-sm sm:text-base">
@@ -245,12 +245,12 @@ const OrbitingContent = () => {
           {/* Subtle backdrop dim */}
           <div className="absolute inset-0 bg-background/30 backdrop-blur-sm" />
           
-          {/* Glassmorphism message card */}
+          {/* Glassmorphism message card - Manrope for warm message text */}
           <div className="smile-message-card relative z-10 mx-4 px-8 py-10 sm:px-12 sm:py-12 rounded-3xl text-center max-w-md">
-            <p className="font-handwritten text-2xl sm:text-3xl text-primary-foreground leading-relaxed">
+            <p className="font-body text-lg sm:text-xl text-primary-foreground leading-relaxed font-medium">
               {SMILE_MESSAGE_LINE1}
             </p>
-            <p className="font-handwritten text-xl sm:text-2xl text-muted-foreground mt-4">
+            <p className="font-body text-base sm:text-lg text-muted-foreground mt-4 font-normal">
               {SMILE_MESSAGE_LINE2}
             </p>
             

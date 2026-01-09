@@ -14,8 +14,12 @@ export default {
     },
     extend: {
       fontFamily: {
-        'handwritten': ['Dancing Script', 'cursive'],
-        'body': ['Quicksand', 'sans-serif'],
+        /* Lemon Milk - Headings, uppercase, slight letter-spacing */
+        'heading': ['LEMON MILK', 'sans-serif'],
+        /* Manrope - Body text, messages, buttons */
+        'body': ['Manrope', 'sans-serif'],
+        /* Keep handwritten as fallback alias */
+        'handwritten': ['LEMON MILK', 'sans-serif'],
       },
       colors: {
         border: "hsl(var(--border))",
