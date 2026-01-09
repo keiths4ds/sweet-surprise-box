@@ -79,7 +79,8 @@ const GiftBox = ({ onOpen }: GiftBoxProps) => {
         {/* Content Container - appears above ribbon */}
         <div className="relative z-20 bg-card/95 backdrop-blur-sm px-6 py-8 rounded-2xl mx-4 text-center shadow-lg">
           {/* ========== BIRTHDAY MESSAGE - CHANGE TEXT HERE ========== */}
-          <h1 className="font-handwritten text-3xl sm:text-4xl md:text-5xl text-primary-foreground leading-tight">
+          {/* Lemon Milk heading via font-heading */}
+          <h1 className="font-heading text-xl sm:text-2xl md:text-3xl text-primary-foreground leading-tight tracking-wide">
             Happiest Birthday to
             <br />
             <span className="text-rose">My Sweet Sweet Pie</span>
@@ -92,7 +93,7 @@ const GiftBox = ({ onOpen }: GiftBoxProps) => {
             <span className="animate-pulse-glow" style={{ animationDelay: '0.5s' }}>💚</span>
           </div>
           
-          {/* Hint text */}
+          {/* Hint text - Manrope via font-body */}
           <p className="mt-4 text-sm text-muted-foreground font-body opacity-70">
             Click to open your gift ✨
           </p>
