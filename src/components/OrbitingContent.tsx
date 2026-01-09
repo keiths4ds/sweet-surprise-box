@@ -34,35 +34,35 @@ const SMILE_BUTTON_DELAY = 7;
 // EXACTLY 5 PHOTO + CAPTION PAIRS - CUSTOMIZE HERE
 // ==========================================================================
 const photoItems = [
-  { 
-    id: 1, 
-    src: 'https://images.unsplash.com/photo-1518495973542-4542c06a5843?w=200&h=200&fit=crop', 
+  {
+    id: 1,
+    src: '/pictures/21st Sept.jpeg',
     alt: 'Memory 1',
-    caption: 'My favorite person 💚'
+    caption: 'Our first kiss when you literally had to teach me :p',
   },
-  { 
-    id: 2, 
-    src: 'https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=200&h=200&fit=crop', 
+  {
+    id: 2,
+    src: '/pictures/Beach.jpeg',
     alt: 'Memory 2',
-    caption: 'Us >>> everything'
+    caption: 'Those eyes made me fall for you',
   },
-  { 
-    id: 3, 
-    src: 'https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=200&h=200&fit=crop', 
+  {
+    id: 3,
+    src: '/pictures/Churchgate.jpeg',
     alt: 'Memory 3',
-    caption: 'Happy You Day ✨'
+    caption: 'My Christmas definitely came early',
   },
-  { 
-    id: 4, 
-    src: 'https://images.unsplash.com/photo-1447752875215-b2761acb3c5d?w=200&h=200&fit=crop', 
+  {
+    id: 4,
+    src: '/pictures/Flowers.jpeg',
     alt: 'Memory 4',
-    caption: 'Forever yours 💕'
+    caption: 'The Prettiest Lady',
   },
-  { 
-    id: 5, 
-    src: 'https://images.unsplash.com/photo-1433086966358-54859d0ed716?w=200&h=200&fit=crop', 
+  {
+    id: 5,
+    src: '/pictures/NMIMS_smile.jpeg',
     alt: 'Memory 5',
-    caption: 'Best memories 🥰'
+    caption: 'The eyes, they never lie..',
   },
 ];
 
