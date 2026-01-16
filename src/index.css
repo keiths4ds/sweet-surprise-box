@@ -678,3 +678,39 @@
     }
   }
 }
+
+/* =========================
+   POLAROID STYLES (FIX)
+========================= */
+
+.polaroid-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 130px;
+  pointer-events: auto;
+}
+
+.polaroid {
+  background: white;
+  padding: 6px 6px 10px;
+  border-radius: 10px;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.18);
+}
+
+.polaroid-caption {
+  margin-top: 6px;
+  max-width: 130px;
+  text-align: center;
+  font-size: 0.75rem;
+  line-height: 1.4;
+
+  white-space: normal;
+  overflow: visible;
+  text-overflow: unset;
+  word-break: break-word;
+}
+
+:root {
+  --photo-orbit-radius: 220px;
+}

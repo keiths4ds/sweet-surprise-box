@@ -38,13 +38,13 @@ const photoItems = [
     id: 1,
     src: '/pictures/21st Sept.jpeg',
     alt: 'Memory 1',
-    caption: 'Our first kiss when you literally had to teach me :p',
+    caption: '67',
   },
   {
     id: 2,
     src: '/pictures/Beach.jpeg',
     alt: 'Memory 2',
-    caption: 'Those eyes made me fall for you',
+    caption: 'Princess fr (iykyk)',
   },
   {
     id: 3,
@@ -62,7 +62,7 @@ const photoItems = [
     id: 5,
     src: '/pictures/NMIMS_smile.jpeg',
     alt: 'Memory 5',
-    caption: 'The eyes, they never lie..',
+    caption: 'We got our photo together :)',
   },
 ];
 
